@@ -227,12 +227,21 @@ public class Sound {
      */
     public void reverse() {
 
-
+        ArrayList<Integer> temp = new ArrayList<Integer>();
+        for(int i=myData.size()-1; i>=0; i--){
+            temp.add(myData.get(i));
+        }
+        myData = temp;
+        refresh();
     }
 
     // this throws out half the data
     public void doublePitch() {
-
+        ArrayList<Integer> temp = new ArrayList<Integer>();
+        for(int i=0; i< myData.size(); i++){
+            temp.add(myData.get(i*2));
+        }
+        myData = temp;
     }
 
 
@@ -268,14 +277,24 @@ public class Sound {
     // - replace the current value with the new value
     // - refresh!
     public void fadeIn(double seconds) {
+        int numToChange = (int) Math.round(this.getSamplingRate() * seconds); // # of values read per second
+        // num to change represents all the samples you want to increment
 
-   
+        // double check that num to change < sound length
+        double factor = 0.1 / numToChange;
+        for(int i=0; i<numToChange; i++){
+            myData.set(i, (int) (myData.get(i) * (factor*i)));
+        }
     }
-
 
     // Fade out over a duration in seconds
     public void fadeOut(double seconds) {
-
+        int numToChange = (int) Math.round(this.getSamplingRate()*seconds);
+        
+        double factor = 1.0 / numToChange;
+        for(int i=numToChange; i>=0; i--){
+            myData.set()
+        }
     }
 
 
