@@ -238,10 +238,11 @@ public class Sound {
     // this throws out half the data
     public void doublePitch() {
         ArrayList<Integer> temp = new ArrayList<Integer>();
-        for(int i=0; i< myData.size(); i++){
+        for(int i=0; i< myData.size()/2; i++){
             temp.add(myData.get(i*2));
         }
         myData = temp;
+        refresh();
     }
 
 
@@ -281,20 +282,22 @@ public class Sound {
         // num to change represents all the samples you want to increment
 
         // double check that num to change < sound length
-        double factor = 0.1 / numToChange;
+        double factor = 1.0 / numToChange;
         for(int i=0; i<numToChange; i++){
             myData.set(i, (int) (myData.get(i) * (factor*i)));
         }
+        refresh();
     }
 
     // Fade out over a duration in seconds
     public void fadeOut(double seconds) {
         int numToChange = (int) Math.round(this.getSamplingRate()*seconds);
         
-        double factor = 1.0 / numToChange;
-        for(int i=numToChange; i>=0; i--){
-            myData.set()
+        double factor = numToChange / 1.0;
+        for(int i=0; i<numToChange; i++){
+            myData.set(i, (int) (myData.get(i) * (factor*i)));
         }
+        refresh();
     }
 
 
@@ -303,12 +306,25 @@ public class Sound {
      * A square wave alternates between -max and +max.
      */
     public void setSquare(int hertz) {
+        refresh();
         int maxAmplitude = 25000;
         // based on hertz: cycles per second
         // cycle - is one complete wave 
         // sampleRate() -- getSamplingRate() - samples per second
         // You need to calculate the samplesPerCycle 
-
+        int samplesPerCycle = (int)Math.round(this.getSamplingRate() / hertz);
+        int maxSamples = (int) Math.round(samplesPerCycle / 2);
+      //  int minSamples = (int) samplesPerCycle - maxSamples;
+        int sec = 10; // number of seconds we want to have a square wave for
+        int cycles = (int) Math.round(hertz * sec);
+        for(int i=0; i<cycles; i++){
+            for(int j=0; i<samplesPerCycle; j++){
+                if(j<=maxSamples){
+                    myData.set((j + j*i), maxAmplitude);
+                }
+                myData.set((j+j*i), -maxAmplitude);
+            }
+        }
     }
 
 
