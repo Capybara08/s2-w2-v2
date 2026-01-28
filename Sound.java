@@ -249,7 +249,9 @@ public class Sound {
   
     //complete this method
     public void amplify (double amt) {
-
+        for(int i=0; i<myData.size(); i++){
+            myData.set(i, (int)(clampSample(myData.get(i)*amt)));
+        }
     }
 
     /*
